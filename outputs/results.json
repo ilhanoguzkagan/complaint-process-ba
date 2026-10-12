@@ -1,0 +1,135 @@
+{
+  "case_counts": {
+    "baseline": 3855,
+    "pilot": 968
+  },
+  "kpis": [
+    {
+      "KPI": "Registration effort (median)",
+      "Unit": "min",
+      "Baseline": 14.2,
+      "Pilot": 11.6,
+      "Change": "-18%",
+      "Target": "-15% vs baseline",
+      "Target met": "Yes"
+    },
+    {
+      "KPI": "Received to registered (median)",
+      "Unit": "hours",
+      "Baseline": 20.3,
+      "Pilot": 4.0,
+      "Change": "-81%",
+      "Target": "-",
+      "Target met": "-"
+    },
+    {
+      "KPI": "First response time (mean)",
+      "Unit": "days",
+      "Baseline": 3.0,
+      "Pilot": 1.2,
+      "Change": "-59%",
+      "Target": "<= 1.5",
+      "Target met": "Yes"
+    },
+    {
+      "KPI": "First response within 1.5 days",
+      "Unit": "%",
+      "Baseline": 22.1,
+      "Pilot": 71.6,
+      "Change": "+49.5 pp",
+      "Target": "-",
+      "Target met": "-"
+    },
+    {
+      "KPI": "Closure time (mean)",
+      "Unit": "days",
+      "Baseline": 16.1,
+      "Pilot": 11.4,
+      "Change": "-29%",
+      "Target": "<= 14",
+      "Target met": "Yes"
+    },
+    {
+      "KPI": "Closed within 14 days",
+      "Unit": "%",
+      "Baseline": 40.5,
+      "Pilot": 78.1,
+      "Change": "+37.6 pp",
+      "Target": "-",
+      "Target met": "-"
+    },
+    {
+      "KPI": "Data completeness at registration",
+      "Unit": "%",
+      "Baseline": 76.0,
+      "Pilot": 97.4,
+      "Change": "+21.4 pp",
+      "Target": ">= 95%",
+      "Target met": "Yes"
+    },
+    {
+      "KPI": "Rework rate (records sent back)",
+      "Unit": "%",
+      "Baseline": 16.3,
+      "Pilot": 6.6,
+      "Change": "-9.7 pp",
+      "Target": "<= 5%",
+      "Target met": "No"
+    },
+    {
+      "KPI": "Credit-note approval cycle (median)",
+      "Unit": "days",
+      "Baseline": 5.7,
+      "Pilot": 1.1,
+      "Change": "-80%",
+      "Target": "<= 2",
+      "Target met": "Yes"
+    }
+  ],
+  "trial": {
+    "trials": 10,
+    "old_mean_min": 14.6,
+    "new_mean_min": 12.0,
+    "pct_faster": 17.3,
+    "saving_min_ci95": [
+      2.0,
+      3.0
+    ]
+  },
+  "benefit_assumptions": {
+    "rework_minutes_per_case": 25,
+    "paper_credit_note_minutes": 18,
+    "digital_credit_note_minutes": 3,
+    "manual_report_hours_per_week": 3,
+    "reporting_weeks_per_year": 48,
+    "productive_hours_per_fte": 1650
+  },
+  "benefits": [
+    {
+      "Benefit": "Faster registration",
+      "Annual volume": 3855,
+      "Hours saved per year": 173.0
+    },
+    {
+      "Benefit": "Less rework",
+      "Annual volume": 3855,
+      "Hours saved per year": 156.0
+    },
+    {
+      "Benefit": "Digital credit-note approval",
+      "Annual volume": 1157,
+      "Hours saved per year": 289.0
+    },
+    {
+      "Benefit": "Automated weekly KPI extract",
+      "Annual volume": 48,
+      "Hours saved per year": 144.0
+    },
+    {
+      "Benefit": "Total",
+      "Annual volume": "",
+      "Hours saved per year": 762.0
+    }
+  ],
+  "fte_equivalent": 0.5
+}

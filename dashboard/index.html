@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Complaint Process Redesign</title>
+<meta name="description" content="Before/after KPI dashboard for a complaint-handling process redesign (Business Analysis case study, synthetic data).">
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --text: #1d2433; --muted: #5b6577; --border: #e2e6ec;
+    --base: #9aa5b5; --pilot: #2563eb; --good: #15803d; --good-bg: #dcfce7; --bad: #b45309; --bad-bg: #fef3c7;
+    --grid: #e9edf2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1420; --card: #171e2d; --text: #e6eaf2; --muted: #9aa5b8; --border: #263045;
+      --base: #6b778c; --pilot: #60a5fa; --good: #4ade80; --good-bg: #14321f; --bad: #fbbf24; --bad-bg: #3a2c0b;
+      --grid: #232c3f;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1420; --card: #171e2d; --text: #e6eaf2; --muted: #9aa5b8; --border: #263045;
+    --base: #6b778c; --pilot: #60a5fa; --good: #4ade80; --good-bg: #14321f; --bad: #fbbf24; --bad-bg: #3a2c0b;
+    --grid: #232c3f;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 28px 16px 48px; }
+  header h1 { font-size: 1.6rem; margin: 0 0 4px; letter-spacing: -.01em; }
+  header p { margin: 0; color: var(--muted); }
+  .note { margin: 14px 0 22px; padding: 10px 14px; border: 1px solid var(--border); border-left: 4px solid var(--pilot);
+          background: var(--card); border-radius: 8px; color: var(--muted); font-size: .9rem; }
+  .legend { display: flex; gap: 16px; font-size: .85rem; color: var(--muted); margin-bottom: 10px; flex-wrap: wrap; }
+  .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px;
+                         margin-right: 6px; vertical-align: -1px; background: var(--c); }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .kpi h3 { margin: 0 0 8px; font-size: .82rem; font-weight: 600; color: var(--muted); }
+  .kpi .vals { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .kpi .from { color: var(--base); font-size: 1rem; text-decoration: line-through; text-decoration-thickness: 1px; }
+  .kpi .to { font-size: 1.55rem; font-weight: 700; color: var(--pilot); }
+  .kpi .unit { color: var(--muted); font-size: .85rem; }
+  .kpi .meta { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; font-size: .76rem; }
+  .badge { padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
+  .badge.met { background: var(--good-bg); color: var(--good); border-color: transparent; }
+  .badge.miss { background: var(--bad-bg); color: var(--bad); border-color: transparent; }
+  .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr)); gap: 14px; margin-top: 18px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 14px 6px; min-width: 0; }
+  .card h2 { font-size: 1rem; margin: 0 0 2px; }
+  .card p { margin: 0 0 6px; color: var(--muted); font-size: .85rem; }
+  .chart { width: 100%; height: 340px; }
+  .stat { font-size: .9rem; margin: 6px 0 8px; }
+  footer { margin-top: 24px; color: var(--muted); font-size: .85rem; }
+  footer a { color: var(--pilot); }
+</style>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Complaint Handling Redesign: Before vs After</h1>
+    <p>Kestrel Components Ltd. · 2024 baseline vs pilot (Feb–Apr 2025)</p>
+  </header>
+  <div class="note">Business Analysis case study by Oguzkagan Ilhan. The company and all data are <strong>fictional and synthetic</strong>; the method mirrors a real complaint-workflow redesign. <span id="counts"></span></div>
+
+  <div class="legend"><span style="--c: var(--base)">2024 baseline</span><span style="--c: var(--pilot)">Pilot after redesign</span></div>
+  <section class="kpis" id="kpis" aria-label="Key performance indicators"></section>
+
+  <section class="charts">
+    <div class="card">
+      <h2>First-response time by month</h2>
+      <p>Mean days from complaint received to first response. Target 1.5 days.</p>
+      <div class="chart" id="trend" role="img" aria-label="Monthly mean first response time, baseline and pilot"></div>
+    </div>
+    <div class="card">
+      <h2>Where cases wait</h2>
+      <p>Median hours between consecutive process steps (event-log analysis).</p>
+      <div class="chart" id="steps" role="img" aria-label="Median waiting time per process step, baseline vs pilot"></div>
+    </div>
+    <div class="card">
+      <h2>Controlled registration trial</h2>
+      <p>The same 10 complaints registered in the old and the new screen.</p>
+      <div class="stat" id="trialStat"></div>
+      <div class="chart" id="trial" role="img" aria-label="Registration minutes per trial, old vs new screen"></div>
+    </div>
+    <div class="card">
+      <h2>Capacity released</h2>
+      <p>Estimated hours saved per year, by improvement lever.</p>
+      <div class="stat" id="fteStat"></div>
+      <div class="chart" id="benefit" role="img" aria-label="Estimated hours saved per year by lever"></div>
+    </div>
+  </section>
+
+  <footer>
+    Full case study, requirements, user stories and UAT pack: <a href="https://github.com/ilhanoguzkagan/complaint-process-ba">GitHub repository</a> ·
+    <a href="https://github.com/ilhanoguzkagan/complaint-process-ba/blob/main/docs/00_executive_summary.md">Executive summary</a> · Data regenerated by <code>run.sh</code>.
+  </footer>
+</main>
+
+<script src="data.js"></script>
+<script>
+(function () {
+  const D = window.DASHBOARD_DATA;
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const fmt = (v, unit) => unit === "%" ? v.toFixed(1) + "%" : v.toFixed(1);
+
+  document.getElementById("counts").textContent =
+    `${D.case_counts.baseline.toLocaleString()} baseline vs ${D.case_counts.pilot.toLocaleString()} pilot complaints.`;
+
+  document.getElementById("kpis").innerHTML = D.kpis.map(k => {
+    const badge = k["Target met"] === "-" ? "" :
+      `<span class="badge ${k["Target met"] === "Yes" ? "met" : "miss"}">${k["Target met"] === "Yes" ? "Target met" : "Target missed"} (${k.Target})</span>`;
+    const unit = k.Unit === "%" ? "" : k.Unit;
+    return `<article class="kpi"><h3>${k.KPI}</h3>
+      <div class="vals"><span class="from">${fmt(k.Baseline, k.Unit)}</span>
+      <span class="to">${fmt(k.Pilot, k.Unit)}</span><span class="unit">${unit}</span></div>
+      <div class="meta"><span class="badge">${k.Change} vs baseline</span>${badge}</div></article>`;
+  }).join("");
+
+  function layout(extra) {
+    return Object.assign({
+      margin: { l: 48, r: 12, t: 8, b: 40 }, paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)",
+      font: { color: css("--text"), size: 12 }, showlegend: false,
+      xaxis: { gridcolor: css("--grid"), zerolinecolor: css("--grid") },
+      yaxis: { gridcolor: css("--grid"), zerolinecolor: css("--grid") },
+    }, extra);
+  }
+  const cfg = { responsive: true, displayModeBar: false };
+
+  function draw() {
+    const base = css("--base"), pilot = css("--pilot");
+
+    const series = p => D.monthly.filter(m => m.period === p);
+    Plotly.react("trend", ["baseline", "pilot"].map(p => ({
+      x: series(p).map(m => m.month + "-01"), y: series(p).map(m => m.first_response_d),
+      name: p, mode: "lines+markers", line: { color: p === "pilot" ? pilot : base, width: 2.5 },
+      hovertemplate: "%{x|%b %Y}: %{y:.2f} days<extra></extra>",
+    })), layout({
+      yaxis: { title: "days", rangemode: "tozero", gridcolor: css("--grid") },
+      xaxis: { type: "date", gridcolor: css("--grid") },
+      shapes: [
+        { type: "line", xref: "paper", x0: 0, x1: 1, y0: 1.5, y1: 1.5, line: { color: css("--good"), dash: "dash", width: 1.5 } },
+        { type: "line", x0: "2025-01-13", x1: "2025-01-13", yref: "paper", y0: 0, y1: 1, line: { color: css("--muted"), dash: "dot", width: 1 } },
+      ],
+      annotations: [
+        { x: "2025-01-13", yref: "paper", y: 1, text: "go-live", showarrow: false, xanchor: "left", font: { size: 11, color: css("--muted") } },
+        { xref: "paper", x: 0, y: 1.5, text: "target", showarrow: false, yanchor: "bottom", xanchor: "left", font: { size: 11, color: css("--good") } },
+      ],
+    }), cfg);
+
+    const narrow = window.innerWidth < 600, leftMargin = narrow ? 130 : 190;
+    const steps = D.steps.slice().reverse();
+    const label = s => s.transition.replace(" -> ", " →<br>");
+    Plotly.react("steps", ["pilot", "baseline"].map(p => ({
+      type: "bar", orientation: "h", name: p, y: steps.map(label), x: steps.map(s => s["median_" + p]),
+      marker: { color: p === "pilot" ? pilot : base },
+      hovertemplate: `${p}: %{x:.1f} h<extra></extra>`,
+    })), layout({ barmode: "group", margin: { l: leftMargin, r: 12, t: 8, b: 40 },
+      xaxis: { title: "median hours", gridcolor: css("--grid") }, yaxis: { tickfont: { size: narrow ? 9 : 10 } }, bargap: .25 }), cfg);
+
+    const t = D.trial_rows;
+    Plotly.react("trial", [
+      ...t.map(r => ({ x: [r.old_process_minutes, r.new_process_minutes], y: [r.trial, r.trial],
+        mode: "lines", line: { color: css("--grid"), width: 3 }, hoverinfo: "skip" })),
+      { x: t.map(r => r.old_process_minutes), y: t.map(r => r.trial), mode: "markers", name: "Old screen",
+        marker: { color: base, size: 11 }, hovertemplate: "Old: %{x} min<extra></extra>" },
+      { x: t.map(r => r.new_process_minutes), y: t.map(r => r.trial), mode: "markers", name: "New screen",
+        marker: { color: pilot, size: 11 }, hovertemplate: "New: %{x} min<extra></extra>" },
+    ], layout({ xaxis: { title: "minutes to register", gridcolor: css("--grid") },
+      yaxis: { title: "trial", autorange: "reversed", dtick: 1, gridcolor: css("--grid") } }), cfg);
+
+    const b = D.benefits.filter(r => r.Benefit !== "Total");
+    Plotly.react("benefit", [{
+      type: "bar", orientation: "h", y: b.map(r => r.Benefit), x: b.map(r => r["Hours saved per year"]),
+      marker: { color: pilot }, text: b.map(r => r["Hours saved per year"] + " h"), textposition: "auto",
+      hovertemplate: "%{y}: %{x} h/year<extra></extra>",
+    }], layout({ margin: { l: leftMargin, r: 12, t: 8, b: 40 }, xaxis: { title: "hours per year", gridcolor: css("--grid") } }), cfg);
+  }
+
+  const tr = D.trial;
+  document.getElementById("trialStat").innerHTML =
+    `${tr.old_mean_min} → ${tr.new_mean_min} min on average: <strong>${tr.pct_faster}% faster</strong> ` +
+    `(95% CI of saving ${tr.saving_min_ci95[0]}–${tr.saving_min_ci95[1]} min).`;
+  const total = D.benefits.find(r => r.Benefit === "Total")["Hours saved per year"];
+  document.getElementById("fteStat").innerHTML =
+    `≈ <strong>${total.toLocaleString()} hours/year</strong> (~${D.fte_equivalent} FTE) returned to investigation work.`;
+
+  draw();
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
+})();
+</script>
+</body>
+</html>
