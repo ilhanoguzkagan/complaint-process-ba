@@ -55,8 +55,9 @@ def kpi_table(cases):
     groups = dict(tuple(cases.groupby("period")))
     rows = []
     for name, unit, target, check, metric in KPIS:
-        base, pilot = metric(groups["baseline"]), metric(groups["pilot"])
-        rows.append({"KPI": name, "Unit": unit, "Baseline": round(base, 1), "Pilot": round(pilot, 1),
+        # Round first so the change shown on a card matches the two values printed next to it.
+        base, pilot = round(metric(groups["baseline"]), 1), round(metric(groups["pilot"]), 1)
+        rows.append({"KPI": name, "Unit": unit, "Baseline": base, "Pilot": pilot,
                      "Change": f"{pilot - base:+.1f} pp" if unit == "%" else f"{(pilot - base) / base:+.0%}",
                      "Target": target,
                      "Target met": "-" if check is None else ("Yes" if check(pilot, base) else "No")})

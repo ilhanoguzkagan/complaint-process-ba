@@ -32,14 +32,14 @@ Synthetic data: 3,855 baseline complaints (Jan-Dec 2024) vs 968 pilot complaints
 | KPI | Unit | Baseline | Pilot | Change | Target | Target met |
 |---|---|---|---|---|---|---|
 | Registration effort (median) | min | 14.2 | 11.6 | -18% | -15% vs baseline | Yes |
-| Received to registered (median) | hours | 20.3 | 4.0 | -81% | - | - |
-| First response time (mean) | days | 3.0 | 1.2 | -59% | <= 1.5 | Yes |
+| Received to registered (median) | hours | 20.3 | 4.0 | -80% | - | - |
+| First response time (mean) | days | 3.0 | 1.2 | -60% | <= 1.5 | Yes |
 | First response within 1.5 days | % | 22.1 | 71.6 | +49.5 pp | - | - |
 | Closure time (mean) | days | 16.1 | 11.4 | -29% | <= 14 | Yes |
 | Closed within 14 days | % | 40.5 | 78.1 | +37.6 pp | - | - |
 | Data completeness at registration | % | 76.0 | 97.4 | +21.4 pp | >= 95% | Yes |
 | Rework rate (records sent back) | % | 16.3 | 6.6 | -9.7 pp | <= 5% | No |
-| Credit-note approval cycle (median) | days | 5.7 | 1.1 | -80% | <= 2 | Yes |
+| Credit-note approval cycle (median) | days | 5.7 | 1.1 | -81% | <= 2 | Yes |
 
 **Controlled registration trial (10 paired complaints):** 14.6 -> 12.0 min on average, **17.3% faster** (95% CI of saving: 2.0-3.0 min per complaint).
 

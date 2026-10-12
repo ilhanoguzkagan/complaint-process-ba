@@ -18,7 +18,7 @@
       "Unit": "hours",
       "Baseline": 20.3,
       "Pilot": 4.0,
-      "Change": "-81%",
+      "Change": "-80%",
       "Target": "-",
       "Target met": "-"
     },
@@ -27,7 +27,7 @@
       "Unit": "days",
       "Baseline": 3.0,
       "Pilot": 1.2,
-      "Change": "-59%",
+      "Change": "-60%",
       "Target": "<= 1.5",
       "Target met": "Yes"
     },
@@ -81,7 +81,7 @@
       "Unit": "days",
       "Baseline": 5.7,
       "Pilot": 1.1,
-      "Change": "-80%",
+      "Change": "-81%",
       "Target": "<= 2",
       "Target met": "Yes"
     }
