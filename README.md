@@ -1,7 +1,7 @@
 # Customer Complaint Handling — Process Redesign
 ### A Business Analysis case study: from as-is mapping to UAT sign-off and measured benefits
 
-**Author:** Oguzkagan Ilhan · Industrial Engineer · [LinkedIn](https://www.linkedin.com/in/oguzkagan-ilhan-29620085)
+**Author:** Oguzkagan Ilhan · Industrial Engineer · [LinkedIn](https://www.linkedin.com/in/oguzkaganilhan)
 **Interactive dashboard:** [`dashboard/index.html`](dashboard/index.html) (published via GitHub Pages)
 
 > **About this case study.** Kestrel Components Ltd., its people, customers and all data in this repository are **fictional and synthetic**. The project is a reconstruction of a complaint-workflow redesign I led as Customer Quality Team Lead at an automotive components manufacturer — defining SAP-linked data requirements with IT, testing revisions, training users and measuring the new process against the old one. Company details and figures have been replaced so the methodology can be shown in full; every number below is computed from the generated data by the scripts in this repo.
